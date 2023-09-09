@@ -47,9 +47,13 @@ class MessagesController < ApplicationController
           #{snippet.to_json}
         ```
     TEXT
+    Message.create(chat_id: Chat.first.id, role: "system", content: message_with_snippet)
 
+    hash = Message.for_openai(chat.messages.where.not(role: "user").last(6))
 
-    hash = [ {:role=>"user", :content=> message_with_snippet}, {:role=>"user", :content=>Message.first.content} ]
+    puts "==========================="
+    puts hash
+    puts "==========================="
     client = OpenAI::Client.new
     response = client.chat(
       parameters: {
