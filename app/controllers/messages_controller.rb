@@ -4,8 +4,8 @@ class MessagesController < ApplicationController
     Message.where(content: nil).delete_all
     Message.where(content: "").delete_all
 
-    user = User.where(email: "test@hey.com", password: "heyhey").first_or_create
-    mchat = Chat.where(user_id: user.id).first_or_create
+    user =  User.where(email:"guy@gmail.com").first_or_create
+    mchat = Chat.where(user_id: User.first.id).first_or_create
     text = <<~TEXT
       You are an accounting expert that specializes the FASB Codification. You will only respond with FASB information. Respond to the user based on the "text" property of the JSON object attached to the user input. The "text" value is an excerpt of a PDF uploaded by the user and may be accompanied by other properties containing metadata. In addition to your response based on the "text" property of the JSON. You must site the page and section by each statement. Do not add any additional information. Make sure the answer is correct and don't output false content. If the text does not relate to the query, simply state 'Text Not Found in FASB'. Ignore outlier search results which has nothing to do with the question. Only answer what is asked. The answer should be short and concise. Answer step-by-step.
     TEXT
@@ -27,9 +27,6 @@ class MessagesController < ApplicationController
 
     chat = Chat.find(@message.chat_id)
     response = call_openai(chat: chat)
-    puts ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-    puts Message.last.content
-    puts ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
     @messages = Message.all.order(created_at: :asc)
     @chat = Chat.first
     render :index
@@ -60,14 +57,7 @@ class MessagesController < ApplicationController
         messages: hash,
         temperature: 0.7,
       })
-    puts "=============================="
-    puts response
-    puts "=============================="
     Message.create!(chat_id: Chat.first.id,content: response["choices"][0]["message"]["content"], role: response["choices"][0]["message"]["role"])
-    puts "+++++++++++++++++++++"
-    puts Message.last.content
-    puts "+++++++++++++++++++++"
-
     response
   end
 
@@ -89,13 +79,13 @@ class MessagesController < ApplicationController
     result ? result["metadata"] : {}
   end
 
-  def get_embeddings(text,retries: 3)
+  def get_embeddings(text, retries: 3)
     raise ArgumentError, "text cannot be empty" if text.empty?
 
     uri = URI("https://api.openai.com/v1/engines/text-embedding-ada-002/embeddings")
     request = Net::HTTP::Post.new(uri)
     request["Content-Type"] = "application/json"
-    api_key = ENV["OPENAI_API_KEY"]
+    api_key = ENV["OPENAI_ACCESS_TOKEN"]
 
     request["Authorization"] = "Bearer #{api_key}"
 
@@ -122,12 +112,7 @@ class MessagesController < ApplicationController
 
   # Set up PostgreSQL connection
   def connect_to_db(db_name, recreate_db: false)
-    begin
-      conn = PG.connect(dbname: db_name)
-    rescue PG::Error => e
-      puts "Error connecting to database: #{e.message}"
-    end
-
+    conn = PG.connect(dbname:  ENV['DB_NAME'], host: ENV["DB_HOST"], port: 5432, user: ENV['DB_USER'], password: ENV['DB_PASS'])
     conn.exec("SET client_min_messages TO warning")
     conn.exec("CREATE EXTENSION IF NOT EXISTS vector")
     conn.exec("CREATE TABLE IF NOT EXISTS items (id serial primary key, metadata jsonb, embedding vector(1536))")

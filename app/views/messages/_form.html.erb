@@ -6,16 +6,12 @@
 
 .loader {
   display: none;
-  top: 50%;
-  left: 50%;
-  position: absolute;
-  transform: translate(-50%, -50%);
 }
 
 .loading {
   border: 2px solid #ccc;
-  width: 60px;
-  height: 60px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   border-top-color: #1ecd97;
   border-left-color: #1ecd97;
@@ -43,7 +39,7 @@
     <%= form.button type: :submit, class: "button rounded-lg py-3 px-3 mx-20 bg-blue-600 text-white inline-block font-medium cursor-pointer my-2" do %>
       <span>Send</span>
     <% end %>
-    <div class="loader">
+    <div class="loader button rounded-lg py-3 px-3 mx-20 bg-blue-600 text-white inline-block font-medium cursor-pointer my-2">
       <div class="loading">
       </div>
     </div>

@@ -29,5 +29,3 @@ group :test do
   gem 'launchy'
   gem 'capybara'
 end
-
-gem "devise", "~> 4.9"
