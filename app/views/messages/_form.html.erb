@@ -1,0 +1,60 @@
+<style>
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.loader {
+  display: none;
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
+.loading {
+  border: 2px solid #ccc;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border-top-color: #1ecd97;
+  border-left-color: #1ecd97;
+  animation: spin 1s infinite ease-in;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+</style>
+
+<%= form_with(model: Message.new, url: [chat, chat.messages.new]  ) do |form| %>
+  <div class="my-5 px-20">
+    <%= form.text_area :content, rows: 4, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full", autofocus: true, "x-on:keydown.cmd.enter" => "$event.target.form.requestSubmit();" %>
+  </div>
+
+  <div class="grid justify-items-end">
+    <%= form.button type: :submit, class: "button rounded-lg py-3 px-3 mx-20 bg-blue-600 text-white inline-block font-medium cursor-pointer my-2" do %>
+      <span>Send</span>
+    <% end %>
+    <div class="loader">
+      <div class="loading">
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<script>
+  const theButton = document.querySelector(".button");
+
+  theButton.addEventListener("click", () => {
+    theButton.style.display = "none";
+    document.getElementsByClassName("loader")[0].style.display = "block";
+  });
+</script>

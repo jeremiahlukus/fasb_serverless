@@ -1,0 +1,5 @@
+<script src="https://cdn.tailwindcss.com"></script>
+<% @messages.each do |message| %>
+  <%= render partial: "messages/message", locals: { message: message } %>
+<% end %>
+<%= render partial: "messages/form", locals: { chat: @chat } %>
