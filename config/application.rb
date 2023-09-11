@@ -2,6 +2,11 @@ Jets.application.configure do
   config.project_name = "fasb_serverless"
   config.mode = "html"
 
+  config.lambda.layers = [
+    "arn:aws:lambda:us-east-1:267897273784:layer:pgLayer:1",
+  ]
+  config.gems.disable = true
+
   config.prewarm.enable = false# default is true
   # config.prewarm.rate = '30 minutes' # default is '30 minutes'
   # config.prewarm.concurrency = 2 # default is 2

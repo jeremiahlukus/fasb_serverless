@@ -10,7 +10,7 @@ gem "jetpacker"
 
 # Include pg gem if you are using ActiveRecord, remove next line
 # and config/database.yml file if you are not
-gem "pg"
+gem "pg", "~> 1.5.4"
 
 gem "dynomite"
 gem "zeitwerk", ">= 2.5.0"

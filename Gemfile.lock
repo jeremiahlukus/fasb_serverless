@@ -275,7 +275,7 @@ DEPENDENCIES
   jetpacker
   jets (~> 4.0.0)
   launchy
-  pg
+  pg (~> 1.5.4)
   pgvector
   puma
   rack

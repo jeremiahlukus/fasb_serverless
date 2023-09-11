@@ -3,6 +3,9 @@ class MessagesController < ApplicationController
   def index
     Message.where(content: nil).delete_all
     Message.where(content: "").delete_all
+    if Message.count > 10
+      Message.delete_all
+    end
 
     user =  User.where(email:"guy@gmail.com").first_or_create
     mchat = Chat.where(user_id: User.first.id).first_or_create
